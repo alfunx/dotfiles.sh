@@ -56,6 +56,7 @@ sparse_tree() {
 	!LICENSE
 	!.gitattributes
 	!.gitignore
+	!.github/
 _EOF_
 }
 
@@ -167,6 +168,8 @@ edit_info() {
 sparse_edit() {
     local sparse_file="$1"; shift
     local temp_dir="$(mktemp -dt dotfiles.XXXXXX)"
+    mkdir --parents "$temp_dir/$(dirname "$sparse_file")"
+    echo "!$sparse_file" >> "$dotfiles_dir"/info/sparse-checkout
     git --git-dir="$dotfiles_dir" show :"$sparse_file" 2>/dev/null > "$temp_dir/$sparse_file"
     ${EDITOR:-vim} "$temp_dir/$sparse_file"
     git --git-dir="$dotfiles_dir" update-index --add \
